@@ -42,7 +42,7 @@ unexport GREP_OPTIONS
 # effects are thus separated out and done before the recursive
 # descending is started. They are now explicitly listed as the
 # prepare rule.
-
+CFLAGS_trace.o := -I$(src)
 # Beautify output
 # ---------------------------------------------------------------------------
 #
@@ -367,7 +367,7 @@ CFLAGS_KERNEL	=
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage -fno-tree-loop-im
 
-CFLAGS_trace.o := -I$(srctree)
+
 # Use USERINCLUDE when you must reference the UAPI directories only.
 USERINCLUDE    := \
 		-I$(srctree)/arch/$(hdr-arch)/include/uapi \
@@ -648,7 +648,7 @@ else
 ifeq ($(cc-name),clang)
 KBUILD_CFLAGS	+= -O3
 else
-KBUILD_CFLAGS	+= -O2 -finline-functions -Wno-maybe-uninitialized
+KBUILD_CFLAGS	+= -O3 -finline-functions -Wno-maybe-uninitialized
 endif
 endif
 
