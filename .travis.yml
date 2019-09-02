@@ -1,0 +1,35 @@
+sudo: required
+language: cpp
+compiler: gcc
+dist: trusty
+
+before_install:
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B05F25D762E3157
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
+
+install: 
+  - sudo apt-get install -qq g++-8
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90
+
+script: 
+  - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - wget https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz
+  - tar -xvf gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz
+  - chmod +x ./gcc-fix.sh
+  - chmod +x ./travis.sh
+  - sudo bash ./gcc-fix.sh
+  - sudo bash ./travis.sh
+
+after_success:
+  - export UPLOADTOOL_SUFFIX=octo-linaro
+  - export UPLOADTOOL_BODY="\\\"Experimental Z00T\\\"
+  - sudo bash upload.sh $TRAVIS_BUILD_DIR/out/*.zip
+
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)$/
+
+group: travis_latest
+os: linux
